@@ -194,7 +194,14 @@ int main()
             }
             else
             {
-                vertexPrompt.setString("Vertex count inputted; chaos gaming with a " + to_string(pointCount) + "-agon :)");
+                if (points.size() == 0)
+                {
+                    vertexPrompt.setString("click the screen to position the " + to_string(pointCount) + " vertices, then once more to position the first point.");
+                }
+                else
+                {
+                    vertexPrompt.setString("Vertex count inputted; chaos gaming with a " + to_string(pointCount) + "-agon :)");
+                }
             }
             vertexPrompt.setCharacterSize(24);
             vertexPrompt.setFillColor(Color::White);
@@ -204,7 +211,7 @@ int main()
         
         for(int i = 0; i < points.size(); i++)
         {
-            CircleShape rect(.75);
+            CircleShape rect(1.5);
             rect.setPosition(Vector2f(points[i].x, points[i].y));
             rect.setFillColor(Color::Blue);
             window.draw(rect);
