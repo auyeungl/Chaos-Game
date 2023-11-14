@@ -12,10 +12,16 @@ using namespace std;
 struct Button {
     public:
         Button(int ButtonX, int ButtonY, int ButtonWidth, int ButtonHeight, Color ButtonColor);
+        Button(int ButtonX, int ButtonY, int ButtonWidth, int ButtonHeight, Color ButtonColor, string buttonText);
         RectangleShape& returnShape() {
             RectangleShape* returnPointer = &button;
             return *returnPointer;
-        }
+        };
+        Text& returnText() {
+            Text* returnPointer = &text;
+            return *returnPointer;
+        };
+        bool checkPressed() { return pressed;};
         void buttonPress(int mouseX, int mouseY);
 
     private:
@@ -25,6 +31,9 @@ struct Button {
         int width;
         int height;
         RectangleShape button;
+        Text text;
+        bool pressed;
+        Font font;
 };
 Button::Button(int ButtonX, int ButtonY, int ButtonWidth, int ButtonHeight, Color ButtonColor)
 {
@@ -40,11 +49,34 @@ Button::Button(int ButtonX, int ButtonY, int ButtonWidth, int ButtonHeight, Colo
     button.setFillColor(color);
 }
 
+Button::Button(int ButtonX, int ButtonY, int ButtonWidth, int ButtonHeight, Color ButtonColor, string buttonText)
+{
+    x = ButtonX;
+    y = ButtonY;
+    width = ButtonWidth;
+    height = ButtonHeight;
+    color = ButtonColor;
+
+    RectangleShape tempRect(Vector2f(width, height));
+    button = tempRect;
+    button.setPosition(x, y);
+    button.setFillColor(color);
+
+    font.loadFromFile("comic.ttf");
+    text.setString(buttonText);
+    text.setFont(font);
+    text.setFillColor(Color::White);
+    text.setPosition(x, y - (width / 6));
+    text.setCharacterSize(width/2);
+}
+
+
 void Button::buttonPress(int mouseX, int mouseY)
 {
-    if ((mouseX >= x && mouseX <= (x + width)) && (mouseY >= y && mouseY <= mouseY + height) && )
+    if ((mouseX >= x && mouseX <= (x + width)) &&   (mouseY >= y && mouseY <= (y + height)))
     {
         button.setFillColor(Color::White);
+        pressed = true;
     }
     else
     {
@@ -77,6 +109,12 @@ int main()
         /*
 		Handle the players input
 		*/
+        Button test(500, 500, 100, 100, Color::Red, "3");
+        Button test2(700, 500, 100, 100, Color::Red, "4");
+        Button test3(900, 500, 100, 100, Color::Red, "5");
+
+
+
         Event event;
         while (window.pollEvent(event))
         {
@@ -120,6 +158,10 @@ int main()
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
+                    test.buttonPress(event.mouseButton.x, event.mouseButton.y);
+                    test2.buttonPress(event.mouseButton.x, event.mouseButton.y);
+
+                    test3.buttonPress(event.mouseButton.x, event.mouseButton.y);
 
                     if (seed == 0)
                     {
@@ -180,8 +222,12 @@ int main()
 		****************************************
 		*/
         window.clear();
-        Button test(500, 500, 100, 100, Color::Red);
         window.draw(test.returnShape());
+        window.draw(test.returnText());
+        window.draw(test2.returnShape());
+        window.draw(test2.returnText());
+        window.draw(test3.returnShape());
+        window.draw(test3.returnText());
         Text vertexPrompt;
         Font comic;
 
