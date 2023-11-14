@@ -6,10 +6,40 @@
 #include <vector>
 #include <random>
 
-
-// Make code easier to type with "using namespace"
 using namespace sf;
 using namespace std;
+
+struct Button {
+    public:
+        Button(int ButtonX, int ButtonY, int ButtonWidth, int ButtonHeight, Color ButtonColor);
+        RectangleShape& returnShape() {
+            RectangleShape* returnPointer = &button;
+            return returnPointer;
+        }
+
+    private:
+        Color color;
+        int x;
+        int y;
+        int width;
+        int height;
+        RectangleShape button;
+};
+Button::Button(int ButtonX, int ButtonY, int ButtonWidth, int ButtonHeight, Color ButtonColor)
+{
+    x = ButtonX;
+    y = ButtonY;
+    width = ButtonWidth;
+    height = ButtonHeight;
+    color = ButtonColor;
+
+    RectangleShape button(Vector2f(width, height));
+    button.setPosition(x, y);
+    button.setFillColor(color);
+}
+
+// Make code easier to type with "using namespace"
+
 
 int main()
 {
@@ -30,13 +60,9 @@ int main()
 
 	while (window.isOpen())
 	{
-
         /*
-		****************************************
 		Handle the players input
-		****************************************
 		*/
-        
         Event event;
         while (window.pollEvent(event))
         {
@@ -51,8 +77,6 @@ int main()
                 {
                     input += static_cast<char>(event.text.unicode);
                 }
-            
-              
             }
             if (event.type == sf::Event::KeyPressed)
             {
@@ -63,11 +87,9 @@ int main()
                         input.pop_back();
                     }
                 }
-                if (event.key.scancode == sf::Keyboard::Scan::Enter)
+                else if (event.key.scancode == sf::Keyboard::Scan::Enter)
                 {
                     try {
-
-
                         if (stoi(input) >= 3 && stoi(input) <= 7)
                         {
                             pointCount = stoi(input);
@@ -80,13 +102,7 @@ int main()
                 }
             }
 
-           
-
-
-
-
-
-            if (event.type == sf::Event::MouseButtonPressed && pointCount != 0)
+            if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
@@ -100,18 +116,13 @@ int main()
                     std::cout << "mouse x: " << event.mouseButton.x << std::endl;
                     std::cout << "mouse y: " << event.mouseButton.y << std::endl;
 
-                    if(vertices.size() < pointCount)
+                    if(vertices.size() < pointCount && pointCount != 0)
                     {
-                        vertices.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
-                        cout << "new vertex" << endl;
-                        
+                        vertices.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));                        
                     }
-                    else if(points.size() == 0)
+                    else if(points.size() == 0 && pointCount != 0)
                     {
-                        ///fourth click
-                        ///push back to points vector
                         points.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
-                        cout << "first point" << endl;
                     }
                 }
             }
@@ -145,10 +156,6 @@ int main()
                 points.push_back(Vector2f((vertices[verticeSel].x + points.back().x) / 2, (vertices[verticeSel].y + points.back().y) / 2));
 
             }
-            ///generate more point(s)
-            ///select random vertex
-            ///calculate midpoint between random vertex and the last point in the vector
-            ///push back the newly generated coord.
             
         }
 
@@ -158,11 +165,12 @@ int main()
 		****************************************
 		*/
         window.clear();
-        RectangleShape box(Vector2f(25,25));
-
+        Button test(500, 500, 100, 100, Color::Red);
+        window.draw(test.returnShape);
         Text vertexPrompt;
         Font comic;
-        
+
+        RectangleShape box(Vector2f(25, 25));
         box.setPosition(700, 55);
         try
         {
@@ -179,9 +187,11 @@ int main()
         {
             box.setFillColor(Color::Red);
         }
+
+
         if (!comic.loadFromFile("comic.ttf"))
         {
-            //window.close();
+            window.close();
         }
         else
         {
@@ -223,6 +233,9 @@ int main()
             vert.setFillColor(Color::Green);
             window.draw(vert);
         }
+
+
+
         window.display();
     }
 }
