@@ -14,8 +14,9 @@ struct Button {
         Button(int ButtonX, int ButtonY, int ButtonWidth, int ButtonHeight, Color ButtonColor);
         RectangleShape& returnShape() {
             RectangleShape* returnPointer = &button;
-            return returnPointer;
+            return *returnPointer;
         }
+        void buttonPress(int mouseX, int mouseY);
 
     private:
         Color color;
@@ -33,9 +34,22 @@ Button::Button(int ButtonX, int ButtonY, int ButtonWidth, int ButtonHeight, Colo
     height = ButtonHeight;
     color = ButtonColor;
 
-    RectangleShape button(Vector2f(width, height));
+    RectangleShape tempRect(Vector2f(width, height));
+    button = tempRect;
     button.setPosition(x, y);
     button.setFillColor(color);
+}
+
+void Button::buttonPress(int mouseX, int mouseY)
+{
+    if ((mouseX >= x && mouseX <= (x + width)) && (mouseY >= y && mouseY <= mouseY + height) && )
+    {
+        button.setFillColor(Color::White);
+    }
+    else
+    {
+        button.setFillColor(color);
+    }
 }
 
 // Make code easier to type with "using namespace"
@@ -106,6 +120,7 @@ int main()
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
+
                     if (seed == 0)
                     {
                         seed = event.mouseButton.x * event.mouseButton.y;
@@ -166,7 +181,7 @@ int main()
 		*/
         window.clear();
         Button test(500, 500, 100, 100, Color::Red);
-        window.draw(test.returnShape);
+        window.draw(test.returnShape());
         Text vertexPrompt;
         Font comic;
 
